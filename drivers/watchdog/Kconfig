@@ -22,6 +22,19 @@ config WATCHDOG_AUTOSTART
 	  when you want to have support for 'wdt' command but do not want
 	  to have watchdog enabled by default.
 
+config SPL_WATCHDOG_AUTOSTART
+	bool "Automatically start watchdog timer"
+	depends on WDT
+	default y
+	help
+	  Automatically start watchdog timer and start servicing it during
+	  init phase. Enabled by default. Disable this option if you want
+	  to compile U-Boot with CONFIG_WDT support but do not want to
+	  activate watchdog, like when CONFIG_WDT option is disabled. You
+	  would be able to start watchdog manually by 'wdt' command. Useful
+	  when you want to have support for 'wdt' command but do not want
+	  to have watchdog enabled by default.
+
 config WATCHDOG_TIMEOUT_MSECS
 	int "Watchdog timeout in msec"
 	default 128000 if ARCH_MX25 || ARCH_MX31 || ARCH_MX5 || ARCH_MX6
@@ -36,6 +49,13 @@ config HW_WATCHDOG
 
 config IMX_WATCHDOG
 	bool "Enable Watchdog Timer support for IMX and LSCH2 of NXP"
+	select HW_WATCHDOG if !WDT
+	help
+	  Select this to enable the IMX and LSCH2 of Layerscape watchdog
+	  driver.
+
+config SPL_IMX_WATCHDOG
+	bool "Enable Watchdog Timer support for IMX and LSCH2 of NXP spl"
 	select HW_WATCHDOG if !WDT
 	help
 	  Select this to enable the IMX and LSCH2 of Layerscape watchdog

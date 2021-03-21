@@ -1,0 +1,191 @@
+/ {
+	binman: binman {
+		multiple-images;
+
+		u-boot-spl-ddr {
+			filename = "spl/u-boot-spl-ddr.bin";
+			pad-byte = <0xff>;
+			align-size = <4>;
+			align = <4>;
+
+			u-boot-spl {
+				align-end = <4>;
+			};
+
+			blob_1: blob-ext@1 {
+				filename = "lpddr4_pmu_train_1d_imem.bin";
+				size = <0x8000>;
+			};
+
+			blob_2: blob-ext@2 {
+				filename = "lpddr4_pmu_train_1d_dmem.bin";
+				size = <0x4000>;
+			};
+
+			blob_3: blob-ext@3 {
+				filename = "lpddr4_pmu_train_2d_imem.bin";
+				size = <0x8000>;
+			};
+
+			blob_4: blob-ext@4 {
+				filename = "lpddr4_pmu_train_2d_dmem.bin";
+				size = <0x4000>;
+			};
+		};
+
+		itb {
+			filename = "u-boot.itb";
+
+			fit {
+				description = "Configuration to load ATF before U-Boot";
+				#address-cells = <1>;
+				fit,external-offset = <CONFIG_FIT_EXTERNAL_OFFSET>;
+
+				images {
+					uboot@1 {
+						description = "U-Boot (64-bit)";
+						os = "u-boot";
+						type = "standalone";
+						arch = "arm64";
+						compression = "none";
+						load = <0x40200000>;
+
+						u-boot-nodtb {
+						};
+					};
+
+					fdt@1 {
+						description = "imx8mq-nitrogen8m";
+						type = "flat_dt";
+						compression = "none";
+
+						blob {
+							filename = "imx8mq-nitrogen8m.dtb";
+						};
+					};
+
+					atf@1 {
+						description = "ARM Trusted Firmware";
+						os = "arm-trusted-firmware";
+						type = "firmware";
+						arch = "arm64";
+						compression = "none";
+						load = <0x00910000>;
+						entry = <0x00910000>;
+
+						blob {
+							filename = "bl31.bin";
+						};
+					};
+				};
+
+				configurations {
+					default = "config@1";
+
+					config@1 {
+						description = "imx8mq-nitrogen8m";
+						firmware = "uboot@1";
+						loadables = "atf@1";
+						fdt = "fdt@1";
+					};
+				};
+			};
+		};
+
+		flash {
+			mkimage {
+				args = "-n spl/u-boot-spl.cfgout -T imx8mimage -e 0x7E1000";
+
+				blob@1 {
+					filename = "u-boot.itb";
+				};
+
+				blob@2 {
+					filename = "spl/u-boot-spl-ddr.bin";
+				};
+			};
+		};
+	};
+};
+
+&{/soc@0} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30000000} {
+	u-boot,dm-spl;
+};
+
+//gpio1
+&{/soc@0/bus@30000000/gpio@30200000} {
+	u-boot,dm-spl;
+};
+
+//gpio2
+&{/soc@0/bus@30000000/gpio@30210000} {
+	u-boot,dm-spl;
+};
+
+//gpio 3
+&{/soc@0/bus@30000000/gpio@30220000} {
+	u-boot,dm-spl;
+};
+
+//gpio 4
+&{/soc@0/bus@30000000/gpio@30230000} {
+	u-boot,dm-spl;
+};
+
+//gpio 5
+&{/soc@0/bus@30000000/gpio@30240000} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30000000/watchdog@30280000} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30000000/pinctrl@30330000} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000/i2c@30a20000} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000/i2c@30a20000/i2cmux@70} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000/i2c@30a20000/i2cmux@70/i2c1@0} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000/i2c@30a20000/i2cmux@70/i2c1@1} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000/i2c@30a20000/i2cmux@70/i2c1@2} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000/i2c@30a20000/i2cmux@70/i2c1@0/reg-arm-dram@60} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000/i2c@30a20000/i2cmux@70/i2c1@1/reg-dram-1p1v@60} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/bus@30800000/i2c@30a20000/i2cmux@70/i2c1@2/reg-soc-gpu-vpu@60} {
+	u-boot,dm-spl;
+};
+
+&{/soc@0/usb@38100000} {
+	u-boot,dm-spl;
+	maximum-speed = "high-speed";
+};

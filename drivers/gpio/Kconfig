@@ -209,6 +209,11 @@ config MXC_GPIO
 	help
 	  Support GPIO controllers on various i.MX platforms
 
+config SPL_MXC_GPIO
+	bool "Freescale/NXP MXC GPIO driver in SPL"
+	help
+	  Support GPIO controllers on various i.MX platforms
+
 config MXS_GPIO
 	bool "Freescale/NXP MXS GPIO driver"
 	help

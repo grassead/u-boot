@@ -105,6 +105,13 @@ config IMX_SECO_DEK_ENCAP
 	  This enabled the DEK blob encapsulation with the SECO API. This option
 	  is only available on imx8.
 
+config IMX_USB_BOOT_IS_BOARD_BOOT
+	bool "Allow USB SDP boot using uuu"
+	default n
+	help
+	  This enabled the support of SDP boot using USB. This option is only
+	  available on imx7 and imx8"
+
 config CMD_PRIBLOB
 	bool "Support the set_priblob_bitfield command"
 	depends on HAS_CAAM && IMX_HAB

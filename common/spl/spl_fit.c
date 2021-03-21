@@ -516,6 +516,7 @@ static int spl_fit_image_get_os(const void *fit, int noffset, uint8_t *os)
 	return 0;
 }
 
+#ifndef CONFIG_SYS_SPL_FIT_USE_BUFFER_INPLACE
 /*
  * The purpose of the FIT load buffer is to provide a memory location that is
  * independent of the load address of any FIT component.
@@ -532,6 +533,20 @@ static void *spl_get_fit_load_buffer(size_t size)
 	}
 	return buf;
 }
+#endif
+
+#ifdef CONFIG_SYS_SPL_FIT_USE_BUFFER_INPLACE
+/*
+ * The purpose of the FIT buffer addr is to provide the location of the fit
+ * buffer.
+ */
+static void* spl_get_fit_buffer_addr(ulong fit_size, int bl_len)
+{
+	int align_len = ARCH_DMA_MINALIGN - 1;
+	return  (void *)((CONFIG_SYS_TEXT_BASE - fit_size - bl_len -
+			align_len) & ~align_len);
+}
+#endif
 
 /*
  * Weak default function to allow customizing SPL fit loading for load-only
@@ -626,7 +641,11 @@ static int spl_simple_fit_read(struct spl_fit_info *ctx,
 	 * For FIT with external data, data is not loaded in this step.
 	 */
 	sectors = get_aligned_image_size(info, size, 0);
+#ifdef CONFIG_SYS_SPL_FIT_USE_BUFFER_INPLACE
+	buf = spl_get_fit_buffer_addr(size, info->bl_len);
+#else
 	buf = spl_get_fit_load_buffer(sectors * info->bl_len);
+#endif
 
 	count = info->read(info, sector, sectors, buf);
 	ctx->fit = buf;

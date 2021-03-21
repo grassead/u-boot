@@ -177,7 +177,11 @@ u32 spl_boot_device(void)
 	case QSPI_BOOT:
 		return BOOT_DEVICE_NOR;
 	case USB_BOOT:
+#ifdef CONFIG_IMX_USB_BOOT_IS_BOARD_BOOT
+		return BOOT_DEVICE_BOARD;
+#else
 		return BOOT_DEVICE_USB;
+#endif
 	default:
 		return BOOT_DEVICE_NONE;
 	}
