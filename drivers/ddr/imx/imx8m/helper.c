@@ -3,6 +3,8 @@
  * Copyright 2018 NXP
  */
 
+#define DEBUG 1
+
 #include <common.h>
 #include <log.h>
 #include <spl.h>
@@ -44,13 +46,15 @@ void ddr_load_train_firmware(enum fw_type type)
 #endif
 
 	dmem_start = imem_start + IMEM_LEN;
-
+	debug("&_end = 0x%lx, fw_offset= 0x%lx, dmem_start = 0x%lx, imem_start = 0x%lx\n",&_end, fw_offset, dmem_start, imem_start);
 	pr_from32 = imem_start;
 	pr_to32 = DDR_TRAIN_CODE_BASE_ADDR + 4 * IMEM_OFFSET_ADDR;
 	for (i = 0x0; i < IMEM_LEN; ) {
 		tmp32 = readl(pr_from32);
+		debug("Writing 0x%04x to 0x%lx\n", ((tmp32) & 0x0000ffff), pr_to32);
 		writew(tmp32 & 0x0000ffff, pr_to32);
 		pr_to32 += 4;
+		debug("Writing 0x%04x to 0x%lx\n", ((tmp32 >> 16) & 0x0000ffff), pr_to32);
 		writew((tmp32 >> 16) & 0x0000ffff, pr_to32);
 		pr_to32 += 4;
 		pr_from32 += 4;
@@ -61,8 +65,10 @@ void ddr_load_train_firmware(enum fw_type type)
 	pr_to32 = DDR_TRAIN_CODE_BASE_ADDR + 4 * DMEM_OFFSET_ADDR;
 	for (i = 0x0; i < DMEM_LEN; ) {
 		tmp32 = readl(pr_from32);
+		debug("Writing 0x%04x to 0x%lx\n", ((tmp32) & 0x0000ffff), pr_to32);
 		writew(tmp32 & 0x0000ffff, pr_to32);
 		pr_to32 += 4;
+		debug("Writing 0x%04x to 0x%lx\n", ((tmp32 >> 16) & 0x0000ffff), pr_to32);
 		writew((tmp32 >> 16) & 0x0000ffff, pr_to32);
 		pr_to32 += 4;
 		pr_from32 += 4;

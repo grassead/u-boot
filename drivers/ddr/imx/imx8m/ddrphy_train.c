@@ -3,6 +3,8 @@
  * Copyright 2018 NXP
  */
 
+#define DEBUG 1
+
 #include <common.h>
 #include <log.h>
 #include <linux/kernel.h>

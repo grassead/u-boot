@@ -3,6 +3,8 @@
  * Copyright 2018-2019 NXP
  */
 
+#define DEBUG 1
+
 #include <common.h>
 #include <errno.h>
 #include <log.h>

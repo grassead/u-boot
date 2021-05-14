@@ -52,6 +52,7 @@ static int pmic_fan53555_bind(struct udevice *dev)
 	const char *regulator_driver_name = "fan53555_regulator";
 	struct udevice *child;
 	struct driver *drv;
+	const char* name;
 
 	debug("%s\n", __func__);
 
@@ -61,7 +62,7 @@ static int pmic_fan53555_bind(struct udevice *dev)
 		return -ENOENT;
 	}
 
-	return device_bind_with_driver_data(dev, drv, "SW", dev->driver_data,
+	return device_bind_with_driver_data(dev, drv, dev->name, dev->driver_data,
 					    dev_ofnode(dev), &child);
 };
 

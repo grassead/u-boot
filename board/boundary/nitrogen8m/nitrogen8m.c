@@ -27,6 +27,7 @@ static iomux_v3_cfg_t const init_pads[] = {
 
 int board_init(void)
 {
+	printf("Current EL is %u\n", current_el());
 	return 0;
 }
 
